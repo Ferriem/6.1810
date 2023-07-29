@@ -10,7 +10,7 @@ In *user/user.h* `int sleep(int)` tells the defination of sleep.
 
 What we need to do is write a *sleep.c* program under *user* director
 
-```
+```c++
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
@@ -55,7 +55,7 @@ prompt >
 
 All we should do can finished in file */user/pingpong.c*:
 
-```
+```c++
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
@@ -111,7 +111,7 @@ $
 
 */user/primes.c*: 
 
-```
+```c++
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
@@ -193,7 +193,7 @@ $
 
 - Solution: check */user/ls* to get the comprehense of reading directories.
 
-  ```
+  ```c++
   struct dirent de; //dir entry
   struct stat st; //stat information
   int fd; //file descriptor
@@ -205,7 +205,7 @@ $
 
 */user/find.c*:
 
-```
+```c++
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
@@ -300,7 +300,7 @@ eg. `echo a | xargs echo b` are equal to `echo b a` we need to transport the ans
 
 *user/xargs.c*
 
-```
+```c++
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"

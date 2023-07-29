@@ -22,14 +22,14 @@ The `dup` system call duplicates an existing file descriptor, returning a new on
 
 - create a pipe 
 
-  ```
+  ```c++
   int p[2];// p[0] refers to the read end of the pipe, p[1] on the contrary.
   pipe(p);
   ```
 
 - connection between pipe(especially between parent and child process)
 
-  ```
+  ```c++
   if(fd == 0)//create a child process
   {
   	close(0);//release 0 in file descriptor stack to make it available
@@ -52,7 +52,7 @@ The `dup` system call duplicates an existing file descriptor, returning a new on
 
 ### File system
 
-- ```
+- ```c++
   chdir("path")//cd
   open("path", O_CREATE|O_WRONLY); //create a new file
   mknod("path", 1, 1);//create a device file, associated with major and minor device numbers

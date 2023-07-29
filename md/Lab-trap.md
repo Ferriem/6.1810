@@ -16,7 +16,7 @@ Q2.Where is the call to function `f` in the assembly code for main? Where is the
 
 Q3.At what address is the function `printf` located?
 
-```
+```assembly
   printf("%d %d\n", f(8)+1, 13);
   24:	4635                	li	a2,13
   26:	45b1                	li	a1,12
@@ -42,7 +42,7 @@ and 57616(0xe110) has no need to change.
 
 Q6.In the following code, what is going to be printed after `'y='`? (note: the answer is not a specific value.) Why does this happen?
 
-```
+```c++
 	printf("x=%d y=%d", 3);
 ```
 
@@ -57,7 +57,7 @@ We get the idea that the arguments were passed through `a1` and `a2`, the code a
 
 `backtrace()`:
 
-```
+```c++
 void
 backtrace(void){
   uint64 fp = r_fp();
@@ -72,13 +72,13 @@ backtrace(void){
 
 ​	Then we need to add the prototype to *kernel/defs.h*.
 
-```
+```c++
 void            backtrace(void);
 ```
 
 ​	Add `r_fp()` to *kernel/ricsv.h*
 
-```
+```c++
 // read and write tp, the thread pointer, which xv6 uses to hold
 // this core's hartid (core number), the index into cpus[].
 ...
@@ -95,7 +95,7 @@ r_fp()
 
 ​	Insert `backtrace()` in `sys_sleep()` (*kernel/sysproc.c*)
 
-```
+```c++
 uint64
 sys_sleep(void)
 {
@@ -127,14 +127,14 @@ prompt >./grade-lab-traps backtrace
 
 - Put the right declarations in *user/user.h*
 
-  ```
+  ```c++
   int sigalarm(int ticks, void (*handler)());
   int sigreturn(void);
   ```
 
 - Update *user/usys.pl*, *kernel/syscall.h*, and *kernel/syscall.c* to allow `alarmtest` to invoke the sigalarm and sigreturn system calls.
 
-  ```
+  ```c++
   //add in user/usys.pl
   39 entry("sigalarm");
   40 entry("sigreturn");
@@ -158,7 +158,7 @@ prompt >./grade-lab-traps backtrace
 
 ​	`sys_sigalarm()` should store the alarm interval and the pointer to the handler function in new fields in the `proc` structure (*kernel/proc.h*).  Also need to keep track of how many ticks have passed since last call. And initialize `proc` in `allocproc()` in `proc.c`. For now, your `sys_sigreturn` should just return zero.
 
-```
+```c++
 //add in proc.h
 struct proc{
 ...
@@ -205,7 +205,7 @@ sys_sigreturn(void)
 
 - Then we need to modify `usertrap()` so that the user process executes the handler function.
 
-```
+```c++
 if(which_dev == 2){
 //add here
     struct proc *p = myproc();
@@ -239,7 +239,7 @@ prompt >./grade-lab-traps test0
 
 - First we need a new field to store enough state in `struct proc` and prevent re-entrant calls to the handler. --if a handler hasn't returned yet, the kernel shouldn't call it again. Make sure to restore a0. `sigreturn` is a system call, and its return value is stored in a0.
 
-  ```
+  ```c++
   //add in proc.h
   	struct trapframe save_trapframe;
   	int alarm_return;
@@ -268,7 +268,7 @@ prompt >./grade-lab-traps test0
 
 - Then we should do with the `trap.c:usertrap()`
 
-  ```
+  ```c++
     if(which_dev == 2){
       struct proc *p = myproc();
       if(p->alarm_interval && p->alarm_return){

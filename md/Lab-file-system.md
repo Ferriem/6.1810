@@ -8,7 +8,7 @@
 
 - First at *fs.h* to modify the invariant number
 
-  ```
+  ```c++
   #define NDIRECT 11
   #define NINDIRECT (BSIZE / sizeof(uint))
   #define DOUBLEINDIRECT (NINDIRECT * NINDIRECT)
@@ -17,7 +17,7 @@
 
   Because we modify NDIRECT from 12 to 11, the related delaration of `addrs[]` in `struct inode`(*file.h*) and `struct dinode`(*fs.h*) have to change.
 
-  ```
+  ```c++
   struct inode {
   	...
     uint addrs[NDIRECT+2];
@@ -30,7 +30,7 @@
 
 - Then we need to modify `bmap`(*fs.c*). We can imitate the former code. And modify `itrunc` to truncate the double indirect block.
 
-```
+```c++
 static uint
 bmap(struct inode *ip, uint bn)
 {
@@ -173,7 +173,7 @@ prompt > ./lab-grade-fs bigfile
 
 - First create a new syscall number for symlink.
 
-  ```
+  ```c++
   //in user/user.h
   int symlink(const char*, const char*);
   
@@ -198,7 +198,7 @@ prompt > ./lab-grade-fs bigfile
 
 - Implement the `symlink` system call with the function `sys_symlink` in *kernel/sysfile.c*, look at `link` as a guide.
 
-  ```
+  ```c++
   uint64
   sys_symlink(void)
   {
@@ -228,7 +228,7 @@ prompt > ./lab-grade-fs bigfile
 
 - Modify `open` system call. If the linked file is also a symbolic link, you must recursively follow it until a non-link file is reached. If the links form a cycle, you must return an error code. 
 
-  ```
+  ```c++
   uint64
   sys_open(void)
   {

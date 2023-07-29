@@ -8,7 +8,7 @@ Just follow the hints can easily complete the lab. You should look at *kernel/e1
 
 ​		`regs[E1000_TDT]` stores the place of next packet.
 
-```
+```c++
 int
 e1000_transmit(struct mbuf *m)
 {
@@ -41,7 +41,7 @@ e1000_transmit(struct mbuf *m)
 
 `e1000_recv`
 
-```
+```c++
 static void
 e1000_recv(void)
 {

@@ -10,7 +10,7 @@ Map one read-only page at USYSCALL(a virtual address define in *kernel/memlayout
 
 - Then we need to initialize the page table in `allocproc()`(*kernel/proc.c:110*). **BE CAREFUL ABOUT THE ORDER**.
 
-  ```
+  ```c++
   static struct proc*
   allocproc(void)
   ...
@@ -30,7 +30,7 @@ Map one read-only page at USYSCALL(a virtual address define in *kernel/memlayout
 
 - Then we need to do with the permission bits, it's defined in `proc_pagetable()`
 
-  ```
+  ```c++
   	if(mappages(pagetable, USYSCALL, PGSIZE,
                 (uint64)(p->usyscallpage), PTE_R | PTE_U) < 0){
       uvmfree(pagetable, 0);
@@ -40,7 +40,7 @@ Map one read-only page at USYSCALL(a virtual address define in *kernel/memlayout
 
 - At last free page in `freeproc()`
 
-  ```
+  ```c++
    if(p->trapframe)
       kfree((void*)p->trapframe);
     p->trapframe = 0;
@@ -57,7 +57,7 @@ Map one read-only page at USYSCALL(a virtual address define in *kernel/memlayout
 
   Pay attention to the function proc_freepagetables, now we need to do a little more to release the USYSCALL pagetable. 
 
-  ```
+  ```c++
   void
   proc_freepagetable(pagetable_t pagetable, uint64 sz)
   {
@@ -89,7 +89,7 @@ prompt >
 
 ​	`vmprint()`:
 
-```
+```c++
 void
 vmprint(pagetable_t pagetable){
   static int deep = 1;
@@ -119,7 +119,7 @@ The core of the problem is solved now, next do with dependence.
 
 Define the prototype for vmprint in *kernel/defs.h*
 
-```
+```c++
 //vm.c
 void            vmprint(pagetable_t); //add
 ```
@@ -144,13 +144,13 @@ prompt >
 
 - The access bit's offset is 6, so we need to assign it in *kernel/riscv.h*.![pgtb-bit](../image/pgtb-bit.png)
 
-  ```
+  ```c++
   #define PTE_A (1L << 6)
   ```
 
 - `sys_pgaccess` (*kernel/sysproc.c*):
 
-  ```
+  ```c++
   int
   sys_pgaccess(void)
   {

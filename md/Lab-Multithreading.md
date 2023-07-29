@@ -10,7 +10,7 @@
 
 In *user/uthread.c*
 
-```
+```c++
 struct context {
   uint64 ra;
   uint64 sp;
@@ -57,7 +57,7 @@ thread_schedule(void)
 
 In *uthread_switch.S*
 
-```
+```c++
 thread_switch:
 	/* YOUR CODE HERE */
 	sd ra, 0(a0)
@@ -106,7 +106,7 @@ prompt > ./grade-lab-thread uthread
 
 *ph.c*
 
-```
+```c++
 ...
 pthread_mutex_t lock;
 ...
@@ -160,7 +160,7 @@ ph_safe: OK (4.4s)
 
 - **Target**: implement a `barrier`The desired behavior is that each thread blocks in `barrier()` until all `nthreads` of them have called `barrier()`.
 
-```
+```c++
 static void 
 barrier()
 {

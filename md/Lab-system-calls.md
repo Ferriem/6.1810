@@ -140,7 +140,7 @@ The name is **initcode**, and the pid is **1**.
 
 - Add a `sys_trace()` function in *kernel/sysproc.c*, the argument mask should be claimed in *proc.h*, add `int mask;` in `enum procstate`.
 
-  ```
+  ```c++
   uint64
   sys_trace(void)
   {
@@ -159,7 +159,7 @@ The name is **initcode**, and the pid is **1**.
 
   Add `extern uint64 sys_trace(void);` and `[SYS_trace]	sys_trace,`to proper place. Add a name mapping to better print.
 
-  ```
+  ```c++
   static char *syscallnames[] = {
   [SYS_fork]    "fork",
   [SYS_exit]    "exit",
@@ -188,7 +188,7 @@ The name is **initcode**, and the pid is **1**.
 
   Then modify the `syscall()`, we should look at the "1" bit in mask to specify the output. `if(mask >> num & 0b1) output;` is the core of the implementation.
 
-  ```
+  ```c++
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
       // Use num to lookup the system call function for num, call it,
       // and store its return value in p->trapframe->a0
@@ -238,7 +238,7 @@ The sysinfo call tells the **free memory** and **UNUSED process**. We need to wr
 
 - In *kernel/kalloc.c*
 
-  ```
+  ```c++
   uint64
   get_freemem(void)
   {
@@ -255,7 +255,7 @@ The sysinfo call tells the **free memory** and **UNUSED process**. We need to wr
 
 - In *kernel/proc.c*
 
-  ```
+  ```c++
   uint64
   get_freeproc(void)
   {
@@ -271,14 +271,14 @@ The sysinfo call tells the **free memory** and **UNUSED process**. We need to wr
 
 - After write down the two fundemantal function, we need to declare them in *kernel/def.h*
 
-  ```
+  ```c++
   uint64          get_freemem(void);
   uint64          get_freeproc(void);
   ```
 
 - And then in *sysproc.c*, we need to write the crux and use the two functions above.(The function `copyout()` can be learned in *kernel/file.c:97*)
 
-  ```
+  ```c++
   uint64
   sys_sysinfo()
   {
@@ -295,7 +295,7 @@ The sysinfo call tells the **free memory** and **UNUSED process**. We need to wr
 
 - At last, sysinfo is applied in syscall.c
 
-  ```
+  ```c++
   extern uint64 sys_sysinfo(void);
   static uint64 (*syscalls[])(void) = {
   ...

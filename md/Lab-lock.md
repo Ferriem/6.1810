@@ -6,7 +6,7 @@
 
 Following the hints to modify the `struct kmem`
 
-```
+```c++
 struct {
   struct spinlock lock;
   struct run *freelist;
@@ -15,7 +15,7 @@ struct {
 
 And then with the `kinit`
 
-```
+```c++
 void
 kinit()
 {
@@ -30,7 +30,7 @@ kinit()
 
 For `kfree` and `kalloc`, easily get the core number and modify the former code.(Simply change `kmem` to `kmem[i]`).
 
-```
+```c++
 void
 kfree(void *pa)
 {
@@ -98,7 +98,7 @@ prompt >./grade-lab-lock kalloctests
 
 ​	To make the buffer cache faster, I apply a hash to map `blockno`and each need a lock to avoid race and deadlock. Don't implement LRU (buf->prev). You can change the value of `mul` to change the size of buffer.
 
-```
+```c++
 #define mul 2
 struct {
   struct spinlock lock;
@@ -112,7 +112,7 @@ struct {
 
 Each bucket allocate two nodes, which mapping to the element of buf array.
 
-```
+```c++
 binit(void)
 {
   struct buf *b;
@@ -143,7 +143,7 @@ binit(void)
 
 Sub the ref.
 
-```
+```c++
 void
 binit(void)
 {

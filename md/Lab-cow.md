@@ -14,7 +14,7 @@
 
 - Declare the array in *kalloc.c*, and modify `kalloc()` and `kfree` .
 
-  ```
+  ```c++
   uint64 refcount[PHYPGNUM];
   
   void *
@@ -67,7 +67,7 @@
 
 ​	And we need to notice `kinit()` calls `freerange()`, then `freerange()` calls `kfree()`, we need to free the space successfully in the beginning, we need to allocate every page's reference count to be 1 in order to handled by `kfree()`.
 
-```
+```c++
 void
 freerange(void *pa_start, void *pa_end)
 {
@@ -82,7 +82,7 @@ freerange(void *pa_start, void *pa_end)
 
 - When we `fork()` a process, we need to plus the reference count by 1. We can make a micro defination of the increasment. `refinc()` in *kernel/kalloc.c*
 
-  ```
+  ```c++
   void refinc(void* pa){
     if((uint64)pa % PGSIZE != 0 || (uint64)pa >= PHYSTOP)
       panic("refinc");
@@ -97,7 +97,7 @@ freerange(void *pa_start, void *pa_end)
 
 - Then modify `uvmcopy()` in *kernel/vm.c* to map the parent's physical pages into child, instead of a allocating new page. Clear `PTE_W` in the PTEs of both child and parent for pages that have `PTE_W` set.
 
-  ```
+  ```c++
   int
   uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
   {
@@ -160,7 +160,7 @@ $
 
 ​	Generate a `cowpagefault` function(*kernel/trap.c*) to handle these problem. Also need to modify `usertrap()` when a page fault happens.
 
-```
+```c++
 int
 cowpagefault(pagetable_t pagetable, uint64 va)
 {
@@ -214,7 +214,7 @@ usertrap()
 
 - At last, modify `copyout()`(*kernel/vm.c*) to use the same scheme as page faults when it encouters a COW page.
 
-  ```
+  ```c++
   int
   copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
   {

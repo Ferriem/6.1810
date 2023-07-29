@@ -16,7 +16,7 @@ munmap(void *addr, size_t len);
 
 - First do some necessary preparations for the lab.
 
-  ```
+  ```c++
   //in user/usys.pl
   entry("mmap");
   entry("munmap");
@@ -63,7 +63,7 @@ munmap(void *addr, size_t len);
 
   Beside the information above, we also need a `pos` to record the vma's address which returned by `mmap`. And a `size` to record the size of virtual area.
 
-  ```
+  ```c++
   //in kernel/proc.h
   struct vma{
     struct file *file;
@@ -85,7 +85,7 @@ munmap(void *addr, size_t len);
 
   The picture inform us there are unused region below the trapframe area. So we can implement our VMA in the unused area.
 
-  ```
+  ```c++
   //in kernel/proc.c
   static struct proc*
   allocproc(void)
@@ -122,7 +122,7 @@ munmap(void *addr, size_t len);
 
 - Now, let's work on the function `mmap`. As we do before, get the arguments with `argint`, `argaddr`. Generate a proc and file, and allocate the map. `mmap` should increase the file's reference count so that the structure doesn't disappear when the file is closed (hint: see `filedup`)
 
-  ```
+  ```c++
   uint64
   sys_mmap(void){
     uint64 addr;
@@ -173,7 +173,7 @@ munmap(void *addr, size_t len);
 
   See *fcntl.h* and *riscv.h*
 
-  ```
+  ```c++
   #define PROT_NONE       0x0
   #define PROT_READ       0x1
   #define PROT_WRITE      0x2
@@ -188,7 +188,7 @@ munmap(void *addr, size_t len);
 
   We get the idea `PTE_R`, `PTE_W`, `PTE_X` can be represented by `port << 1`.
 
-  ```
+  ```c++
   int 
   vmapagefault(struct proc *p, uint64 va){
     int index;
@@ -225,7 +225,7 @@ munmap(void *addr, size_t len);
   }
   ```
 
-  ```
+  ```c++
   void
   usertrap(void)
   {
@@ -244,7 +244,7 @@ munmap(void *addr, size_t len);
 
 - And then we walk into `sys_munmap`, find the VMA for the address range and uncap the specified pages(use uvmunmap). If all pages were removed, decrement the reference count of `struct file`. If an unmapped page has been modified and the file is mapped `MAP_SHARED`, write the page back to the file. Look at `filewrite` for inspiration.
 
-  ```
+  ```c++
   uint64
   sys_munmap(void){
     uint64 addr;
@@ -292,7 +292,7 @@ munmap(void *addr, size_t len);
 
 - Modify `fork` in *kernel/proc.c*, ensure that the child has the same mapped regions as the parent. Increment the reference count for a `struct file`, it is OK to allocate a new physical page,.
 
-  ```
+  ```c++
   	safestrcpy(np->name, p->name, sizeof(p->name));
   	//add here	
   	for(int i = 0; i < NVMA; i++){
@@ -307,7 +307,7 @@ munmap(void *addr, size_t len);
 
 - And then `exit`, we need to unmap the process's mapped regions as if `munmap` is called, so we can just imitate the code in `munmap`.
 
-  ```
+  ```c++
   for(int i = 0; i < NVMA; i++){
       if(p->vma[i].length){
         if(p->vma[i].flag == MAP_SHARED){
